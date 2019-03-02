@@ -1,16 +1,7 @@
-
-[[ -s "$HOME/.profile" ]] && source "$HOME/.profile" # Load the default .profile
-
 parse_git_branch() {
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 export PS1="\u@\h \W\[\033[32m\]\$(parse_git_branch)\[\033[00m\] $ "
-alias start-namely="foreman start -f Procfile.dev"
-
-export NVM_DIR="/Users/nickhehr/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-alias screen="/usr/local/Cellar/screen"
-alias screen="/usr/local/bin/screen-4.5.1"
 
 md() {
   if [[ -d $@ ]]; then
@@ -28,66 +19,77 @@ md() {
 
 export -f md
 
+# usage: load your local environment with a .env file or point to another file
+# dotenv // load .env by default
+# dotenv .env.staging // load the environment variables in .env.staging
+dotenv() {
+  export $(cat ${1:-.env} | xargs);
+}
+
+# usage: select a branch to change to, sorted alpha-numeric
+change_branch() {
+  PS3="What branch would you like to select? (0 to exit)"$'\n'""
+  select branch in $(git branch --list --sort=refname | tr -d '*')
+  do
+    if [ -z $branch ]; then
+      return
+    else
+      git checkout $branch
+      return
+    fi
+  done
+}
+
+export -f change_branch
+
+# usage: interactive select for cleaning up old branches
+delete_branch() {
+  PS3="What branch would you like to delete? (0 to exit)"$'\n'""
+  select branch in $(git branch --list --sort=refname | tr -d '*')
+  do
+    if [ -z $branch ]; then
+      return
+    else
+      git branch -D $branch
+    fi
+  done
+}
+
+export -f delete_branch
+
+# usage: get the latest version of a branch from remote
+# refresh_branch // will change to a temp branch, delete previous branch, pull latest from origin
+# refresh_branch branch_name // will delete branch_name, pull latest branch_name from origin
+# refresh_branch branch_name remote_name // will delete branch_name, pull latest branch_name from remote_name
 refresh_branch() {
-  git br -D $1; 
-  git fetch ${2:-upstream} $1:$1;
+  CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  BRANCH=(${1:-$CURRENT_BRANCH})
+  TEMP="temp-$BRANCH"
+  BRANCH_LIST=$(git branch | tr -d "*" | xargs)
+
+  if [[ $CURRENT_BRANCH == $BRANCH ]]; then
+    if [[ ! $BRANCH_LIST =~ $TEMP ]]; then
+      git branch $TEMP
+    fi
+
+    git checkout $TEMP
+  fi
+
+  git branch -D $BRANCH
+  git fetch ${2:-origin} $BRANCH:$BRANCH
+
+  if [[ $CURRENT_BRANCH == $BRANCH ]]; then
+    git checkout $BRANCH
+  fi
 }
 
 export -f refresh_branch
 
-delete_branch_with() {
-  git branch -d $(git br | grep $1);
+push_branch() {
+  git push origin HEAD
 }
 
-export -f delete_branch_with
-
-checkout_branch_with() {
-  git checkout $(git br | grep $1);
-}
-
-export -f checkout_branch_with
-
-watch_pod() {
-  watch -cd "kubectl get pods | grep $1";
-}
-
-export -f watch_pod
-
-delete_pod() {
-  kubectl delete pod --now $1;
-}
-
-helm_update_values() {
-  sed -i "" -E "s/tag: (.*)/tag: \"$1\"/" ~/charts/namely/values.yaml;
-  sed -i "" -E "s/assetsVersion: (.*)/assetsVersion: \"$2\"/" ~/charts/namely/values.yaml;
-  sed -i "" -E "s/assetsVersion: (.*)/assetsVersion: \"$2\"/" ~/charts/hcm/values.yaml;
-  sed -i "" -E "s/assetsVersion: (.*)/assetsVersion: \"$2\"/" ~/charts/bifrost/values.yaml;
-  cd ~/charts && helm dependency update namely && cd -;
-  echo "The values have been updated and charts have been built!"
-}
-
-helm_deploy() {
-  helm install namely --name=$1;
-}
-
-export -f helm_deploy
-
-export -f helm_update_values
-
-
-# eval $(docker-machine env default)
-
-docker_exec() { 
-  local name=$1
-  shift
-  docker exec -ti $(docker ps -f name=$name -q) "$@"
-}
-
-export -f docker_exec
-
-export DOCKER_API_VERSION=1.23
-export KUBECONFIG=/Users/nickhehr/.kube/config
-export TILLER_NAMESPACE=default
+export -f push_branch
 
 generate_rails_tags() {
   echo "Generating tags...";
@@ -96,19 +98,13 @@ generate_rails_tags() {
 
 export -f generate_rails_tags
 
-# ================ Kube aliases ====================
-# alias kb="kubectl --kubeconfig='/Users/jonmohrbacher/kube/dev-kube/kubeconfig'"
-function getpod {
-  kubectl --kubeconfig=/Users/jonmohrbacher/kube/dev-kube/kubeconfig --namespace=$1 get pods | grep $2 | head -n 1 | awk '{ print $1 }'
-}
+[ -f ~/.bashrc ] && source ~/.bashrc
+[ -f ~/.bin/tmuxinator.bash ] && source ~/.bin/tmuxinator.bash
+
+export PATH="/usr/local/opt/postgresql@9.6/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 
-[[ -s "$HOME/.profile" ]] && source "$HOME/.profile" # Load the default .profile
+export LDFLAGS="-L/usr/local/opt/openssl/lib"
+export CPPFLAGS="-I/usr/local/opt/openssl/include"
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-export PATH="$HOME/.yarn/bin:$PATH"
-
-export FZF_DEFAULT_COMMAND='rg --files'
-
-export PLATFORM="$HOME/platform"
+export EDITOR='vim'

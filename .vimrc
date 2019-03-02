@@ -27,6 +27,14 @@ Plugin 'tomtom/tcomment_vim'
 Plugin 'rust-lang/rust.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'digitaltoad/vim-pug'
+Plugin 'leafgarland/typescript-vim'
+Plugin 'rizzatti/dash.vim'
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-commentary'
+Plugin 'w0rp/ale'
+Plugin 'jebaum/vim-tmuxify'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'sheerun/vim-polyglot'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -50,7 +58,7 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'prettier/vim-prettier', {
   \ 'do': 'npm install',
-  \ 'for': ['javascript', 'json'] }
+  \ 'for': ['javascript', 'json', 'typescript'] }
 
 
 " Initialize plugin system
@@ -66,6 +74,8 @@ set softtabstop=2
 set nu
 set exrc
 set clipboard=unnamedplus
+set noerrorbells
+set ignorecase
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -76,6 +86,8 @@ set tags=.git/tags
 
 set rtp+=/usr/local/opt/fzf
 
+let mapleader='\'
+
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_loc_list_height = 5
 let g:syntastic_auto_loc_list = 0
@@ -83,8 +95,25 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 1
 let g:syntastic_javascript_checkers = ['eslint']
 
-highlight link SyntasticErrorSign SignColumn
-highlight link SyntasticWarningSign SignColumn
+" ale syntax linting
+let g:ale_sign_column_always = 1
+let g:ale_sign_error = '•'
+let g:ale_sign_warning = '•'
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 1
+let g:ale_ruby_rubocop_executable = 'bundle'
+let g:ale_linters = {
+\   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices'],
+\   'typescript': ['tslint', 'tsserver'],
+\}
+" adjust colors
+" highlight link ALEError Error
+highlight link ALEStyleError Error
+highlight ALEErrorSign guifg=#1E0010
+highlight link ALEWarning WarningMsg
+highlight link ALEStyleWarning WarningMsg
+highlight ALEWarningSign guifg=#FFFFFF
+
 highlight link SyntasticStyleErrorSign SignColumn
 highlight link SyntasticStyleWarningSign SignColumn
 
@@ -93,9 +122,15 @@ au BufRead,BufNewFile *.es6 setfiletype javascript
 
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
-autocmd BufWritePre *.js,*.jsx,*.json Prettier
+autocmd BufWritePre *.js,*.jsx,*.json,*.ts,*.tsx Prettier
 
+nmap <silent> <leader>d <Plug>DashSearch
 nnoremap ∆ :m .+1<CR>==
 nnoremap ˚ :m .-2<CR>==
 vnoremap ∆ :m '>+1<CR>gv=gv
 vnoremap ˚ :m '<-2<CR>gv=gv
+" overcome the touchbar
+inoremap jj <ESC>
+
+nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
+nnoremap <leader>. :CtrlPTag<cr>
