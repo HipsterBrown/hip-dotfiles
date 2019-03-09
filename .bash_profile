@@ -86,7 +86,7 @@ refresh_branch() {
 export -f refresh_branch
 
 push_branch() {
-  git push origin HEAD
+  git push origin HEAD "$@"
 }
 
 export -f push_branch
@@ -108,3 +108,5 @@ export LDFLAGS="-L/usr/local/opt/openssl/lib"
 export CPPFLAGS="-I/usr/local/opt/openssl/include"
 
 export EDITOR='vim'
+
+export PATH="$HOME/.cargo/bin:$PATH"

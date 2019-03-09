@@ -35,6 +35,8 @@ Plugin 'w0rp/ale'
 Plugin 'jebaum/vim-tmuxify'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'sheerun/vim-polyglot'
+Plugin 'janko/vim-test'
+Plugin 'tpope/vim-dispatch'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -73,7 +75,7 @@ set shiftwidth=2
 set softtabstop=2
 set nu
 set exrc
-set clipboard=unnamedplus
+set clipboard=unnamed
 set noerrorbells
 set ignorecase
 
@@ -97,7 +99,7 @@ let g:syntastic_javascript_checkers = ['eslint']
 
 " ale syntax linting
 let g:ale_sign_column_always = 1
-let g:ale_sign_error = '•'
+let g:ale_sign_error = '!'
 let g:ale_sign_warning = '•'
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = 1
@@ -124,7 +126,16 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 autocmd BufWritePre *.js,*.jsx,*.json,*.ts,*.tsx Prettier
 
+let test#strategy = 'dispatch'
+
+" test.vim mappings
+map <Leader>t :TestFile<CR>
+map <Leader>ts :TestNearest<CR>
+map <Leader>tl :TestLast<CR>
+map <Leader>ta :TestSuite<CR>
+
 nmap <silent> <leader>d <Plug>DashSearch
+nmap <leader>ad <Plug>(ale_detail)
 nnoremap ∆ :m .+1<CR>==
 nnoremap ˚ :m .-2<CR>==
 vnoremap ∆ :m '>+1<CR>gv=gv
