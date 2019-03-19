@@ -1,6 +1,9 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+let g:ale_completion_enabled = 1
+let g:ale_completion_delay = 250
+
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -14,6 +17,7 @@ Plugin 'gmarik/Vundle.vim'
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-rhubarb'
 Plugin 'rking/ag.vim'
 Plugin 'othree/html5.vim'
 Plugin 'cakebaker/scss-syntax.vim'
@@ -25,7 +29,6 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'tpope/vim-surround'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'rust-lang/rust.vim'
-Plugin 'scrooloose/syntastic'
 Plugin 'digitaltoad/vim-pug'
 Plugin 'leafgarland/typescript-vim'
 Plugin 'rizzatti/dash.vim'
@@ -78,9 +81,13 @@ set exrc
 set clipboard=unnamed
 set noerrorbells
 set ignorecase
+set omnifunc=syntaxcomplete#Complete
+set completeopt=menu,menuone,preview,noinsert
+set wildmode=longest,list:longest
+set backspace=indent,eol,start
 
+set statusline+=%{FugitiveStatusline()}
 set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 " Tags
@@ -90,12 +97,7 @@ set rtp+=/usr/local/opt/fzf
 
 let mapleader='\'
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_loc_list_height = 5
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
-let g:syntastic_javascript_checkers = ['eslint']
+let test#typescript#jest#executable = "SKIP_PREFLIGHT_CHECK=true $(yarn bin)/rescripts test"
 
 " ale syntax linting
 let g:ale_sign_column_always = 1
@@ -105,9 +107,13 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = 1
 let g:ale_ruby_rubocop_executable = 'bundle'
 let g:ale_linters = {
-\   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices'],
+\   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices', 'solargraph'],
 \   'typescript': ['tslint', 'tsserver'],
 \}
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace']
+\}
+let g:ale_fix_on_save = 1
 " adjust colors
 " highlight link ALEError Error
 highlight link ALEStyleError Error
@@ -116,11 +122,10 @@ highlight link ALEWarning WarningMsg
 highlight link ALEStyleWarning WarningMsg
 highlight ALEWarningSign guifg=#FFFFFF
 
-highlight link SyntasticStyleErrorSign SignColumn
-highlight link SyntasticStyleWarningSign SignColumn
-
 " associate *.es6 with javascript filetype
 au BufRead,BufNewFile *.es6 setfiletype javascript
+" *.tsx files should be recognized as typescript
+au BufRead,BufNewFile *.tsx setfiletype typescript
 
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
@@ -145,3 +150,16 @@ inoremap jj <ESC>
 
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 nnoremap <leader>. :CtrlPTag<cr>
+
+" ale mappings
+nmap <buffer> <leader>ag <Plug>(ale_go_to_definition_in_split)
+nmap <buffer> <leader>ar <Plug>(ale_find_references)
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+
+" fugitive.vim mappings
+nmap <Leader>gs :Gstatus<CR>
+nmap <Leader>gb :Gblame<CR>
+nmap <Leader>gd :Gdiff<CR>
+nmap <Leader>gl :Glog<CR>
+nmap <Leader>gh :Gbrowse<CR>
