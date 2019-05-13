@@ -19,6 +19,12 @@ md() {
 
 export -f md
 
+notify() {
+  osascript -e "display notification \"$*\" with title \"👋 notify\""
+}
+
+export -f notify
+
 # usage: load your local environment with a .env file or point to another file
 # dotenv // load .env by default
 # dotenv .env.staging // load the environment variables in .env.staging
@@ -26,34 +32,51 @@ dotenv() {
   export $(cat ${1:-.env} | xargs);
 }
 
+# dynamically generate branch completion list
+_list_branch_completions() {
+  COMPREPLY=($(compgen -W "$(git branch --list --sort=refname | tr -d '*')" "${COMP_WORDS[1]}"))
+}
+
 # usage: select a branch to change to, sorted alpha-numeric
 change_branch() {
-  PS3="What branch would you like to select? (0 to exit)"$'\n'""
-  select branch in $(git branch --list --sort=refname | tr -d '*')
-  do
-    if [ -z $branch ]; then
-      return
-    else
-      git checkout $branch
-      return
-    fi
-  done
+  if [[ $# -ge 1 ]]; then
+    git checkout $branch
+  else
+    PS3="What branch would you like to select? (0 to exit)"$'\n'""
+    select branch in $(git branch --list --sort=refname | tr -d '*')
+    do
+      if [ -z $branch ]; then
+        return
+      else
+        git checkout $branch
+        return
+      fi
+    done
+  fi
 }
+
+complete -F _list_branch_completions change_branch
 
 export -f change_branch
 
 # usage: interactive select for cleaning up old branches
 delete_branch() {
-  PS3="What branch would you like to delete? (0 to exit)"$'\n'""
-  select branch in $(git branch --list --sort=refname | tr -d '*')
-  do
-    if [ -z $branch ]; then
-      return
-    else
-      git branch -D $branch
-    fi
-  done
+  if [[ $# -ge 1 ]]; then
+    git branch -D $branch
+  else
+    PS3="What branch would you like to delete? (0 to exit)"$'\n'""
+    select branch in $(git branch --list --sort=refname | tr -d '*')
+    do
+      if [ -z $branch ]; then
+        return
+      else
+        git branch -D $branch
+      fi
+    done
+  fi
 }
+
+complete -F _list_branch_completions delete_branch
 
 export -f delete_branch
 
@@ -83,6 +106,8 @@ refresh_branch() {
   fi
 }
 
+complete -F _list_branch_completions refresh_branch
+
 export -f refresh_branch
 
 push_branch() {
@@ -110,3 +135,5 @@ export CPPFLAGS="-I/usr/local/opt/openssl/include"
 export EDITOR='vim'
 
 export PATH="$HOME/.cargo/bin:$PATH"
+
+export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case --glob "!.git/*"'

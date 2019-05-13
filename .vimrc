@@ -2,7 +2,7 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 
 let g:ale_completion_enabled = 1
-let g:ale_completion_delay = 250
+let g:ale_completion_delay = 150
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -64,15 +64,21 @@ call plug#begin('~/.vim/plugged')
 Plug 'prettier/vim-prettier', {
   \ 'do': 'npm install',
   \ 'for': ['javascript', 'json', 'typescript'] }
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
 
 
 " Initialize plugin system
 call plug#end()
 
+if (has("termguicolors"))
+  set termguicolors
+endif
+
 syntax on
 set noswapfile
 set background=dark
-colorscheme seti
+colorscheme spacemac-theme
 set expandtab
 set shiftwidth=2
 set softtabstop=2
@@ -82,13 +88,22 @@ set clipboard=unnamed
 set noerrorbells
 set ignorecase
 set omnifunc=syntaxcomplete#Complete
-set completeopt=menu,menuone,preview,noinsert
+set completeopt=menu,menuone,preview,noselect,noinsert
 set wildmode=longest,list:longest
 set backspace=indent,eol,start
+hi Visual term=bold cterm=bold ctermbg=205 ctermfg=white
+hi MatchParen cterm=none ctermbg=205 ctermfg=white
 
 set statusline+=%{FugitiveStatusline()}
 set statusline+=%#warningmsg#
 set statusline+=%*
+
+" use ripgrep for ctrlp search
+if executable('rg')
+  set grepprg=rg\ --color=never
+  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+  let g:ctrlp_use_caching = 0
+endif
 
 " Tags
 set tags=.git/tags
@@ -107,9 +122,12 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = 1
 let g:ale_ruby_rubocop_executable = 'bundle'
 let g:ale_linters = {
-\   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices', 'solargraph'],
-\   'typescript': ['tslint', 'tsserver'],
+\   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices'],
+\   'typescript': ['tsserver', 'tslint'],
 \}
+" let g:ale_linters_ignore = {'typescript': ['tslint']}
+let g:ale_typescript_tsserver_use_global = 1
+let g:ale_typescript_tslint_use_global = 1
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace']
 \}
@@ -141,6 +159,8 @@ map <Leader>ta :TestSuite<CR>
 
 nmap <silent> <leader>d <Plug>DashSearch
 nmap <leader>ad <Plug>(ale_detail)
+nmap <leader>af <Plug>(ale_fix)
+nmap <leader>al <Plug>(ale_lint)
 nnoremap ∆ :m .+1<CR>==
 nnoremap ˚ :m .-2<CR>==
 vnoremap ∆ :m '>+1<CR>gv=gv
@@ -149,11 +169,13 @@ vnoremap ˚ :m '<-2<CR>gv=gv
 inoremap jj <ESC>
 
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
-nnoremap <leader>. :CtrlPTag<cr>
+nnoremap <leader>wd :pwd<CR>
+nnoremap <leader>o :Files<CR>
 
 " ale mappings
-nmap <buffer> <leader>ag <Plug>(ale_go_to_definition_in_split)
-nmap <buffer> <leader>ar <Plug>(ale_find_references)
+nmap <leader>ag <Plug>(ale_go_to_definition_in_split)
+nmap <leader>ah <Plug>(ale_go_to_definition)
+nmap <leader>ar <Plug>(ale_find_references)
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
@@ -163,3 +185,7 @@ nmap <Leader>gb :Gblame<CR>
 nmap <Leader>gd :Gdiff<CR>
 nmap <Leader>gl :Glog<CR>
 nmap <Leader>gh :Gbrowse<CR>
+
+" handy tab shortcuts
+nmap <silent> <C-t>o :tabonly<CR>
+nmap <silent> <C-t><C-o> :tabonly<CR>
