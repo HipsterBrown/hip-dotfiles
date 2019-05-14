@@ -78,7 +78,7 @@ endif
 syntax on
 set noswapfile
 set background=dark
-colorscheme spacemac-theme
+colorscheme spacemacs-theme
 set expandtab
 set shiftwidth=2
 set softtabstop=2
@@ -124,12 +124,14 @@ let g:ale_ruby_rubocop_executable = 'bundle'
 let g:ale_linters = {
 \   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices'],
 \   'typescript': ['tsserver', 'tslint'],
+\   'rust': ['cargo', 'rls'],
 \}
 " let g:ale_linters_ignore = {'typescript': ['tslint']}
 let g:ale_typescript_tsserver_use_global = 1
 let g:ale_typescript_tslint_use_global = 1
 let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace']
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'rust': ['rustfmt']
 \}
 let g:ale_fix_on_save = 1
 " adjust colors
@@ -144,6 +146,7 @@ highlight ALEWarningSign guifg=#FFFFFF
 au BufRead,BufNewFile *.es6 setfiletype javascript
 " *.tsx files should be recognized as typescript
 au BufRead,BufNewFile *.tsx setfiletype typescript
+au BufRead,BufNewFile *.Svelte setfiletype html
 
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
