@@ -40,6 +40,9 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'janko/vim-test'
 Plugin 'tpope/vim-dispatch'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'elzr/vim-json'
+Plugin 'kristijanhusak/vim-carbon-now-sh'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -100,7 +103,7 @@ set statusline+=%*
 
 " use ripgrep for ctrlp search
 if executable('rg')
-  set grepprg=rg\ --color=never
+  set grepprg=rg\ --color=never\ --vimgrep
   let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
   let g:ctrlp_use_caching = 0
 endif
@@ -123,11 +126,13 @@ let g:ale_lint_on_enter = 1
 let g:ale_ruby_rubocop_executable = 'bundle'
 let g:ale_linters = {
 \   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices'],
-\   'typescript': ['tsserver', 'tslint'],
+\   'typescript': ['tsserver', 'tslint', 'eslint'],
+\   'javascript': ['tsserver', 'eslint'],
 \   'rust': ['cargo', 'rls'],
 \}
 " let g:ale_linters_ignore = {'typescript': ['tslint']}
 let g:ale_typescript_tsserver_use_global = 1
+let g:ale_javascript_tsserver_use_global = 1
 let g:ale_typescript_tslint_use_global = 1
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
@@ -146,7 +151,7 @@ highlight ALEWarningSign guifg=#FFFFFF
 au BufRead,BufNewFile *.es6 setfiletype javascript
 " *.tsx files should be recognized as typescript
 au BufRead,BufNewFile *.tsx setfiletype typescript
-au BufRead,BufNewFile *.Svelte setfiletype html
+au BufRead,BufNewFile *.art setfiletype html
 
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
@@ -174,6 +179,8 @@ inoremap jj <ESC>
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 nnoremap <leader>wd :pwd<CR>
 nnoremap <leader>o :Files<CR>
+" nnoremap ]q :cnext<CR>
+" nnoremap [q :cprevious<CR>
 
 " ale mappings
 nmap <leader>ag <Plug>(ale_go_to_definition_in_split)
@@ -189,6 +196,24 @@ nmap <Leader>gd :Gdiff<CR>
 nmap <Leader>gl :Glog<CR>
 nmap <Leader>gh :Gbrowse<CR>
 
+function MoveTab()
+  let n = nr2char(getchar())
+  execute n . "tabmove"
+endfunction
+
 " handy tab shortcuts
 nmap <silent> <C-t>o :tabonly<CR>
 nmap <silent> <C-t><C-o> :tabonly<CR>
+nmap <silent> <C-t>l :tablast<CR>
+nmap <silent> <C-t><C-l> :tablast<CR>
+nmap <silent> <C-t>a :tabs<CR>
+nmap <silent> <C-t><C-a> :tabs<CR>
+nnoremap <silent> <C-t>m :call MoveTab()<CR>
+nnoremap <silent> <C-t><C-m> :call MoveTab()<CR>
+
+" fzf shortcuts
+nmap <Leader>b :Buffers<CR>
+nmap <Leader>h :History<CR>
+nmap <Leader>] :BTags<CR>
+nmap <Leader>} :Tags<CR>
+nmap <Leader>s :Rg<CR>
