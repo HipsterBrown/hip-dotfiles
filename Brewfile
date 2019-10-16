@@ -24,6 +24,8 @@ cask 'safari-technology-preview'
 cask '1password'
 cask 'dash'
 cask 'visual-studio-code'
+cask 'simplenote'
+cask 'maccy'
 
 tap 'homebrew/cask-fonts'
 cask 'font-source-code-pro'
