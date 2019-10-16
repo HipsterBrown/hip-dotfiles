@@ -18,7 +18,7 @@ function setup_homebrew() {
 function setup_dotfiles() {
   echo 'installing dotfiles'
   cp .bash_profile ~/.bash_profile
-  cp .bash_profile ~/.zprofile
+  cp .zprofile ~/.zprofile
   cp .vimrc ~/.vimrc
 
   if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
