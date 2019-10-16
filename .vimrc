@@ -43,6 +43,7 @@ Plugin 'tpope/vim-dispatch'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'elzr/vim-json'
 Plugin 'kristijanhusak/vim-carbon-now-sh'
+Plugin 'colepeters/spacemacs-theme.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -196,7 +197,7 @@ nmap <Leader>gd :Gdiff<CR>
 nmap <Leader>gl :Glog<CR>
 nmap <Leader>gh :Gbrowse<CR>
 
-function MoveTab()
+function! MoveTab()
   let n = nr2char(getchar())
   execute n . "tabmove"
 endfunction

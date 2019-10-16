@@ -1,0 +1,17 @@
+[user]
+  name = HipsterBrown
+  email = headhipster@hipsterbrown.com
+
+[alias]
+  br = branch
+  ca = commit --amend
+  co = commit
+  ch = checkout
+  st = status
+
+  changed = whatchanged
+  last = log -1 HEAD
+  unstage = restore --staged
+  add-remote = remote add
+  undo-commit = reset --soft HEAD~1
+  undo-commit-hard = reset --hard HEAD~1
