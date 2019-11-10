@@ -79,6 +79,10 @@ if (has("termguicolors"))
   set termguicolors
 endif
 
+if has('gui_running')
+  set guifont=Fira\ Code
+endif
+
 syntax on
 set noswapfile
 set background=dark
@@ -127,8 +131,8 @@ let g:ale_lint_on_enter = 1
 let g:ale_ruby_rubocop_executable = 'bundle'
 let g:ale_linters = {
 \   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices'],
-\   'typescript': ['tsserver', 'tslint', 'eslint'],
-\   'javascript': ['tsserver', 'eslint'],
+\   'typescript': ['tsserver', 'tslint'],
+\   'javascript': ['eslint', 'tsserver'],
 \   'rust': ['cargo', 'rls'],
 \}
 " let g:ale_linters_ignore = {'typescript': ['tslint']}
