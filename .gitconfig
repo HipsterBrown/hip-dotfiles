@@ -1,0 +1,22 @@
+[user]
+  name = HipsterBrown
+  email = headhipster@hipsterbrown.com
+[credential]
+  helper = osxkeychain
+[alias]
+  ch = checkout
+  br = branch
+  co = commit
+  st = status
+  mg = merge
+  ca = commit --amend
+  changed = whatchanged
+  last = log -1 HEAD
+  unstage = restore --staged
+  add-remote = remote add
+  undo-commit = reset --soft HEAD~1
+  undo-commit-hard = reset --hard HEAD~1
+[color]
+  ui = true
+[core]
+  editor = vim

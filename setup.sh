@@ -18,29 +18,28 @@ function setup_homebrew() {
 function setup_dotfiles() {
   echo 'installing dotfiles'
   cp .bash_profile ~/.bash_profile
+  cp .zprofile ~/.zprofile
   cp .vimrc ~/.vimrc
-  source ~/.bash_profile
 
   if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
     echo 'installing vim-plug for vim magic'
     curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    vim +PlugInstall +qall
   fi
+  vim +PlugInstall +qall
 
-  echo 'installing Vundle plugins for vim'
+  if [ ! -f "$HOME/.vim/bundle/Vundle.vim" ]; then
+    echo 'installing Vundle plugins for vim'
+    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+  fi
   vim +PluginInstall +qall
 }
 
-function install_tmuxinator() {
-  if type gem 2> /dev/null; then
-    echo 'installing tmuxinator from gem'
-    gem install tmuxinator
-  else
-    echo 'need ruby gems to install tmuxinator'
-  fi
+function setup_git_aliases() {
+  echo 'creating git aliases'
+  cp .gitconfig ~/.gitconfig
 }
 
 setup_homebrew
 setup_dotfiles
-install_tmuxinator
+setup_git_aliases

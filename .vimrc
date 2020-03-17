@@ -44,6 +44,7 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'elzr/vim-json'
 Plugin 'kristijanhusak/vim-carbon-now-sh'
 Plugin 'plasticboy/vim-markdown'
+Plugin 'colepeters/spacemacs-theme.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -78,6 +79,10 @@ call plug#end()
 
 if (has("termguicolors"))
   set termguicolors
+endif
+
+if has('gui_running')
+  set guifont=Fira\ Code
 endif
 
 syntax on
@@ -205,7 +210,7 @@ nmap <Leader>gd :Gdiff<CR>
 nmap <Leader>gl :Glog<CR>
 nmap <Leader>gh :Gbrowse<CR>
 
-function MoveTab()
+function! MoveTab()
   let n = nr2char(getchar())
   execute n . "tabmove"
 endfunction
