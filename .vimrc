@@ -43,6 +43,7 @@ Plugin 'tpope/vim-dispatch'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'elzr/vim-json'
 Plugin 'kristijanhusak/vim-carbon-now-sh'
+Plugin 'plasticboy/vim-markdown'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -66,7 +67,8 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'prettier/vim-prettier', {
   \ 'do': 'npm install',
-  \ 'for': ['javascript', 'json', 'typescript'] }
+  \ 'branch': 'release/1.x',
+  \ 'for': ['javascript', 'json', 'typescript', 'html'] }
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 
@@ -117,6 +119,9 @@ let mapleader='\'
 
 let test#typescript#jest#executable = "SKIP_PREFLIGHT_CHECK=true $(yarn bin)/rescripts test"
 
+let g:prettier#exec_cmd_path = "~/.config/yarn/global/node_modules/.bin/prettier"
+let g:prettier#exec_cmd_async = 1
+
 " ale syntax linting
 let g:ale_sign_column_always = 1
 let g:ale_sign_error = '!'
@@ -127,8 +132,9 @@ let g:ale_ruby_rubocop_executable = 'bundle'
 let g:ale_linters = {
 \   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices'],
 \   'typescript': ['tsserver', 'tslint', 'eslint'],
+\   'typescriptreact': ['tsserver', 'tslint', 'eslint'],
 \   'javascript': ['tsserver', 'eslint'],
-\   'rust': ['cargo', 'rls'],
+\   'rust': ['cargo', 'rls']
 \}
 " let g:ale_linters_ignore = {'typescript': ['tslint']}
 let g:ale_typescript_tsserver_use_global = 1
@@ -152,10 +158,11 @@ au BufRead,BufNewFile *.es6 setfiletype javascript
 " *.tsx files should be recognized as typescript
 au BufRead,BufNewFile *.tsx setfiletype typescript
 au BufRead,BufNewFile *.art setfiletype html
+au BufRead,BufNewFile *.svg setfiletype html
 
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
-autocmd BufWritePre *.js,*.jsx,*.json,*.ts,*.tsx Prettier
+autocmd BufWritePre *.js,*.jsx,*.json,*.ts,*.tsx PrettierAsync
 
 let test#strategy = 'dispatch'
 
@@ -184,8 +191,10 @@ nnoremap <leader>o :Files<CR>
 
 " ale mappings
 nmap <leader>ag <Plug>(ale_go_to_definition_in_split)
+nmap <leader>at <Plug>(ale_go_to_definition_in_tab)
 nmap <leader>ah <Plug>(ale_go_to_definition)
 nmap <leader>ar <Plug>(ale_find_references)
+nmap <silent> <C-i> <Plug>(ale_hover)
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 

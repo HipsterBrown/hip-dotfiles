@@ -40,7 +40,7 @@ _list_branch_completions() {
 # usage: select a branch to change to, sorted alpha-numeric
 change_branch() {
   if [[ $# -ge 1 ]]; then
-    git checkout $branch
+    git checkout $1
   else
     PS3="What branch would you like to select? (0 to exit)"$'\n'""
     select branch in $(git branch --list --sort=refname | tr -d '*')
@@ -62,7 +62,7 @@ export -f change_branch
 # usage: interactive select for cleaning up old branches
 delete_branch() {
   if [[ $# -ge 1 ]]; then
-    git branch -D $branch
+    git branch -D $1
   else
     PS3="What branch would you like to delete? (0 to exit)"$'\n'""
     select branch in $(git branch --list --sort=refname | tr -d '*')
@@ -123,10 +123,9 @@ generate_rails_tags() {
 
 export -f generate_rails_tags
 
-[ -f ~/.bashrc ] && source ~/.bashrc
+# [ -f ~/.bashrc ] && source ~/.bashrc
 [ -f ~/.bin/tmuxinator.bash ] && source ~/.bin/tmuxinator.bash
 
-export PATH="/usr/local/opt/postgresql@9.6/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 
 export LDFLAGS="-L/usr/local/opt/openssl/lib"
@@ -135,5 +134,6 @@ export CPPFLAGS="-I/usr/local/opt/openssl/include"
 export EDITOR='vim'
 
 export PATH="$HOME/.cargo/bin:$PATH"
+# export PATH="$HOME/.nodenv/versions/8.15.1/bin:$PATH"
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case --glob "!.git/*"'
