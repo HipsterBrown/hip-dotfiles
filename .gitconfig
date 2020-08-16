@@ -2,7 +2,6 @@
   name = HipsterBrown
   email = headhipster@hipsterbrown.com
 [credential]
-  helper = osxkeychain
 [alias]
   ch = checkout
   br = branch
