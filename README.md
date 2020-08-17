@@ -8,8 +8,10 @@ chmod +x setup.sh
 ```
 
 - installs [Homebrew](https://brew.sh), if it's not installed already
-- installs all formula and casks in the Brewfile 
-- copies `.bash_profile` and `.vimrc` to the HOME directory
-- installs Plug, if not installed already
+- installs all formula and casks in the Brewfile
+- copies `.zprofile`, `.zshrc`, `.tmux.confg`, and `.vimrc` to the HOME directory
+- installs Vundle and Plug, if not installed already
 - installs all Plug and Vundle dependencies for vim
-- installs tmuxinator gem, if Ruby gems are available
+- copies `.gitconfig` into the HOME directory
+- installs [Volta](https://volta.sh/) for easy NodeJS version management
+- installs [`rust`](https://rustup.rs/)

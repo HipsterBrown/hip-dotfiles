@@ -34,6 +34,10 @@ function setup_dotfiles() {
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
   fi
   vim +PluginInstall +qall
+
+  echo 'installing config files'
+  mkdir -p ~/.config/alacritty
+  cp -r .config/ ~/.config/
 }
 
 function setup_git_aliases() {
