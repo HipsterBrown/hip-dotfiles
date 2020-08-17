@@ -2,6 +2,7 @@
   name = HipsterBrown
   email = headhipster@hipsterbrown.com
 [credential]
+  heler = manager-core
 [alias]
   ch = checkout
   br = branch
@@ -19,3 +20,5 @@
   ui = true
 [core]
   editor = vim
+[init]
+  defaultBranch = main
