@@ -12,13 +12,9 @@ function md() {
   fi;
 }
 
-export -f md
-
 function notify() {
   osascript -e "display notification \"$*\" with title \"👋 notify\""
 }
-
-export -f notify
 
 # usage: load your local environment with a .env file or point to another file
 # dotenv // load .env by default
@@ -50,9 +46,7 @@ function change_branch() {
   fi
 }
 
-complete -F _list_branch_completions change_branch
-
-export -f change_branch
+# complete -F _list_branch_completions change_branch
 
 # usage: interactive select for cleaning up old branches
 function delete_branch() {
@@ -71,9 +65,7 @@ function delete_branch() {
   fi
 }
 
-complete -F _list_branch_completions delete_branch
-
-export -f delete_branch
+# complete -F _list_branch_completions delete_branch
 
 # usage: get the latest version of a branch from remote
 # refresh_branch // will change to a temp branch, delete previous branch, pull latest from origin
@@ -101,22 +93,16 @@ function refresh_branch() {
   fi
 }
 
-complete -F _list_branch_completions refresh_branch
-
-export -f refresh_branch
+# complete -F _list_branch_completions refresh_branch
 
 function push_branch() {
   git push origin HEAD "$@"
 }
 
-export -f push_branch
-
 function generate_rails_tags() {
   echo "Generating tags...";
   ctags --verbose --tag-relative -Rf.git/tags --exclude=.git --exclude=tmp --exclude=public --exclude=app/assets --exclude=assets --exclude=node_modules --exclude=.gulp --languages=ruby `bundle list --paths` $MY_RUBY_HOME . && echo "Tag generation complete!";
 }
-
-export -f generate_rails_tags
 
 [ -f ~/.bashrc ] && source ~/.bashrc
 [ -f ~/.bin/tmuxinator.bash ] && source ~/.bin/tmuxinator.bash
