@@ -1,10 +1,3 @@
-autoload -U +X bashcompinit && bashcompinit
-autoload -U +X compinit && compinit
-
-source ~/.zsh/zsh-git-prompt/zshrc.sh
-
-PROMPT='%B%m%~%b$(git_super_status) %# '
-
 function md() {
   if [[ -d $@ ]]; then
     echo "Error: directory $@ already exists.";

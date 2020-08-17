@@ -5,7 +5,7 @@ set -euxo pipefail
 function setup_homebrew() {
   if ! type brew 2> /dev/null; then
     echo 'installing brew'
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   fi
   if [ -f "./Brewfile" ]; then
     # let's brew bundle from a special location
@@ -17,9 +17,10 @@ function setup_homebrew() {
 
 function setup_dotfiles() {
   echo 'installing dotfiles'
-  cp .bash_profile ~/.bash_profile
+  cp .zshrc ~/.zshrc
   cp .zprofile ~/.zprofile
   cp .vimrc ~/.vimrc
+  cp .tmux.conf ~/.tmux.conf
 
   if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
     echo 'installing vim-plug for vim magic'
@@ -40,6 +41,18 @@ function setup_git_aliases() {
   cp .gitconfig ~/.gitconfig
 }
 
+function setup_node() {
+  echo 'installing volta'
+  curl https://get.volta.sh | bash
+}
+
+function setup_rust() {
+  echo 'installing rust'
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+}
+
 setup_homebrew
 setup_dotfiles
 setup_git_aliases
+setup_node
+setup_rust
