@@ -6,7 +6,9 @@ eval "$(starship init zsh)"
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
+alias history='fc -l -100'
 alias ls="exa"
+alias cat="bat"
 
 function md() {
   if [[ -d $@ ]]; then
@@ -39,43 +41,40 @@ function _list_branch_completions() {
 }
 
 # usage: select a branch to change to, sorted alpha-numeric
-function change_branch() {
+change_branch() {
   if [[ $# -ge 1 ]]; then
-    git checkout $branch
+    git checkout $1
   else
-    PS3="What branch would you like to select? (0 to exit)"$'\n'""
-    select branch in $(git branch --list --sort=refname | tr -d '*')
-    do
-      if [ -z $branch ]; then
-        return
-      else
-        git checkout $branch
-        return
-      fi
-    done
+    BRANCH=$(git branch --list --sort=refname | tr -d '  *' | fzf --height 40%)
+    if [ -z $BRANCH ]; then
+      return
+    else
+      git checkout $BRANCH
+      return
+    fi
   fi
 }
-
-# complete -F _list_branch_completions change_branch
 
 # usage: interactive select for cleaning up old branches
-function delete_branch() {
+delete_branch() {
   if [[ $# -ge 1 ]]; then
-    git branch -D $branch
+    git branch -D $1
   else
-    PS3="What branch would you like to delete? (0 to exit)"$'\n'""
-    select branch in $(git branch --list --sort=refname | tr -d '*')
+    tmpfile=$(mktemp)
+    BRANCHES=$(git branch --list --sort=refname | tr -d '  *' | fzf --height 40% -m)
+    echo $BRANCHES > $tmpfile
+    while IFS= read -r BRANCH
     do
-      if [ -z $branch ]; then
+      if [ -z $BRANCH ]; then
+        rm $tmpfile
         return
       else
-        git branch -D $branch
+        git branch -D $BRANCH
       fi
-    done
+    done <$tmpfile
+    rm $tmpfile
   fi
 }
-
-# complete -F _list_branch_completions delete_branch
 
 # usage: get the latest version of a branch from remote
 # refresh_branch // will change to a temp branch, delete previous branch, pull latest from origin
@@ -103,18 +102,21 @@ function refresh_branch() {
   fi
 }
 
-# complete -F _list_branch_completions refresh_branch
-
 function push_branch() {
   git push origin HEAD "$@"
 }
+
+
+function new_branch() {
+  git checkout -b "$@"
+}
+
 
 function generate_rails_tags() {
   echo "Generating tags...";
   ctags --verbose --tag-relative -Rf.git/tags --exclude=.git --exclude=tmp --exclude=public --exclude=app/assets --exclude=assets --exclude=node_modules --exclude=.gulp --languages=ruby `bundle list --paths` $MY_RUBY_HOME . && echo "Tag generation complete!";
 }
 
-[ -f ~/.bashrc ] && source ~/.bashrc
 [ -f ~/.bin/tmuxinator.bash ] && source ~/.bin/tmuxinator.bash
 
 export PATH="/usr/local/opt/postgresql@9.6/bin:$PATH"
