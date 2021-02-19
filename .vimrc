@@ -2,7 +2,7 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 
 let g:ale_completion_enabled = 1
-let g:ale_completion_delay = 150
+let g:ale_completion_delay = 100
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -25,7 +25,6 @@ Plugin 'jelera/vim-javascript-syntax'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mattn/emmet-vim'
 Plugin 'trusktr/seti.vim'
-Plugin 'kchmck/vim-coffee-script'
 Plugin 'tpope/vim-surround'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'rust-lang/rust.vim'
@@ -67,11 +66,11 @@ filetype plugin indent on    " required
 call plug#begin('~/.vim/plugged')
 
 Plug 'prettier/vim-prettier', {
-  \ 'do': 'npm install',
   \ 'branch': 'release/1.x',
   \ 'for': ['javascript', 'json', 'typescript', 'html'] }
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'alok/notational-fzf-vim'
 
 
 " Initialize plugin system
@@ -124,7 +123,7 @@ let mapleader='\'
 
 let test#typescript#jest#executable = "SKIP_PREFLIGHT_CHECK=true $(yarn bin)/rescripts test"
 
-let g:prettier#exec_cmd_path = "~/.config/yarn/global/node_modules/.bin/prettier"
+let g:prettier#exec_cmd_path = "~/.volta/bin/prettier"
 let g:prettier#exec_cmd_async = 1
 
 " ale syntax linting
@@ -231,3 +230,13 @@ nmap <Leader>h :History<CR>
 nmap <Leader>] :BTags<CR>
 nmap <Leader>} :Tags<CR>
 nmap <Leader>s :Rg<CR>
+
+function! s:NameDailyNote()
+  let tstamp = strftime('%Y-%m-%d')
+  exe "Rename " . tstamp . "-daily-notes.md"
+endfunction
+command! NameDailyNote call s:NameDailyNote()
+
+" notional shortcut
+nmap <Leader>nv :NV<CR>
+nmap <Leader>rn :NameDailyNote<CR>
