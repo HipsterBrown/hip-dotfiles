@@ -1,0 +1,11 @@
+tsserver.restart
+workspace.clearWatchman
+solargraph.search
+workspace.showOutput
+eslint.showOutputChannel
+solargraph.downloadCore
+solargraph.config
+editor.action.organizeImport
+tsserver.openTsServerLog
+tsserver.reloadProjects
+tsserver.goToProjectConfig

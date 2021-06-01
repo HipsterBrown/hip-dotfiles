@@ -1,8 +1,16 @@
+runtime macros/matchit.vim
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-let g:ale_completion_enabled = 1
-let g:ale_completion_delay = 100
+" let g:ale_completion_enabled = 1
+" let g:ale_completion_delay = 100
+
+" coc.nvim config
+set hidden
+set cmdheight=2
+set updatetime=300
+set shortmess+=c
+set signcolumn=number
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -25,25 +33,28 @@ Plugin 'jelera/vim-javascript-syntax'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mattn/emmet-vim'
 Plugin 'trusktr/seti.vim'
+Plugin 'kchmck/vim-coffee-script'
 Plugin 'tpope/vim-surround'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'rust-lang/rust.vim'
 Plugin 'digitaltoad/vim-pug'
-Plugin 'leafgarland/typescript-vim'
+" Plugin 'leafgarland/typescript-vim'
 Plugin 'rizzatti/dash.vim'
 Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-commentary'
-Plugin 'w0rp/ale'
+" Plugin 'w0rp/ale'
 Plugin 'jebaum/vim-tmuxify'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'janko/vim-test'
 Plugin 'tpope/vim-dispatch'
 Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-eunuch'
 Plugin 'elzr/vim-json'
 Plugin 'kristijanhusak/vim-carbon-now-sh'
 Plugin 'plasticboy/vim-markdown'
-Plugin 'colepeters/spacemacs-theme.vim'
+Plugin 'dart-lang/dart-vim-plugin'
+Plugin 'chrisbra/csv.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -71,17 +82,13 @@ Plug 'prettier/vim-prettier', {
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'alok/notational-fzf-vim'
-
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Initialize plugin system
 call plug#end()
 
 if (has("termguicolors"))
   set termguicolors
-endif
-
-if has('gui_running')
-  set guifont=Fira\ Code
 endif
 
 syntax on
@@ -106,6 +113,7 @@ hi MatchParen cterm=none ctermbg=205 ctermfg=white
 set statusline+=%{FugitiveStatusline()}
 set statusline+=%#warningmsg#
 set statusline+=%*
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " use ripgrep for ctrlp search
 if executable('rg')
@@ -127,48 +135,65 @@ let g:prettier#exec_cmd_path = "~/.volta/bin/prettier"
 let g:prettier#exec_cmd_async = 1
 
 " ale syntax linting
-let g:ale_sign_column_always = 1
-let g:ale_sign_error = '!'
-let g:ale_sign_warning = '•'
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 1
-let g:ale_ruby_rubocop_executable = 'bundle'
-let g:ale_linters = {
-\   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices'],
-\   'typescript': ['tsserver', 'tslint', 'eslint'],
-\   'typescriptreact': ['tsserver', 'tslint', 'eslint'],
-\   'javascript': ['tsserver', 'eslint'],
-\   'rust': ['cargo', 'rls']
-\}
-" let g:ale_linters_ignore = {'typescript': ['tslint']}
-let g:ale_typescript_tsserver_use_global = 1
-let g:ale_javascript_tsserver_use_global = 1
-let g:ale_typescript_tslint_use_global = 1
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'rust': ['rustfmt']
-\}
-let g:ale_fix_on_save = 1
-" adjust colors
-" highlight link ALEError Error
-highlight link ALEStyleError Error
-highlight ALEErrorSign guifg=#1E0010
-highlight link ALEWarning WarningMsg
-highlight link ALEStyleWarning WarningMsg
-highlight ALEWarningSign guifg=#FFFFFF
+" let g:ale_ignore_2_7_warnings = 1
+" let g:ale_sign_column_always = 1
+" let g:ale_sign_error = '!'
+" let g:ale_sign_warning = '•'
+" let g:ale_lint_on_text_changed = 'never'
+" let g:ale_lint_on_enter = 1
+" let g:ale_ruby_rubocop_executable = 'bundle'
+" let g:ale_ruby_rubocop_options = '--auto-correct'
+" let g:ale_linters = {
+" \   'ruby': ['ruby', 'rubocop', 'brakeman', 'rails_best_practices'],
+" \   'typescript': ['tsserver', 'eslint'],
+" \   'typescriptreact': ['tsserver', 'eslint'],
+" \   'javascript': ['tsserver', 'eslint'],
+" \   'rust': ['cargo', 'rls'],
+" \   'dart': ['dartanalyzer', 'language_server'],
+" \}
+" " let g:ale_linters_ignore = {'typescript': ['tslint']}
+" let g:ale_typescript_tsserver_use_global = 1
+" let g:ale_javascript_tsserver_use_global = 1
+" let g:ale_typescript_tslint_use_global = 1
+" let g:ale_rust_rls_executable = 'rust-analyzer'
+" let g:ale_fixers = {
+" \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+" \   'rust': ['rustfmt'],
+" \   'dart': ['dartfmt']
+" \}
+" let g:ale_fix_on_save = 1
+" " adjust colors
+" " highlight link ALEError Error
+" highlight link ALEStyleError Error
+" highlight ALEErrorSign guifg=#1E0010
+" highlight link ALEWarning WarningMsg
+" highlight link ALEStyleWarning WarningMsg
+" highlight ALEWarningSign guifg=#FFFFFF
+
 
 " associate *.es6 with javascript filetype
 au BufRead,BufNewFile *.es6 setfiletype javascript
 " *.tsx files should be recognized as typescript
-au BufRead,BufNewFile *.tsx setfiletype typescript
+au BufRead,BufNewFile *.jsx set filetype=javascriptreact
+au BufRead,BufNewFile *.tsx set filetype=typescriptreact
 au BufRead,BufNewFile *.art setfiletype html
 au BufRead,BufNewFile *.svg setfiletype html
+augroup filetype javascript syntax=javascript
 
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 autocmd BufWritePre *.js,*.jsx,*.json,*.ts,*.tsx PrettierAsync
 
+autocmd VimResized * :wincmd =
+
+nnoremap <leader>- :wincmd _<cr>:wincmd \|<cr>
+nnoremap <leader>= :wincmd =<cr>
+
 let test#strategy = 'dispatch'
+
+" notational search paths
+let g:nv_search_paths = ['~/notes', '~/Documents']
+let g:nv_create_note_window = 'tabedit'
 
 " test.vim mappings
 map <Leader>t :TestFile<CR>
@@ -177,9 +202,9 @@ map <Leader>tl :TestLast<CR>
 map <Leader>ta :TestSuite<CR>
 
 nmap <silent> <leader>d <Plug>DashSearch
-nmap <leader>ad <Plug>(ale_detail)
-nmap <leader>af <Plug>(ale_fix)
-nmap <leader>al <Plug>(ale_lint)
+" nmap <leader>ad <Plug>(ale_detail)
+" nmap <leader>af <Plug>(ale_fix)
+" nmap <leader>al <Plug>(ale_lint)
 nnoremap ∆ :m .+1<CR>==
 nnoremap ˚ :m .-2<CR>==
 vnoremap ∆ :m '>+1<CR>gv=gv
@@ -194,13 +219,43 @@ nnoremap <leader>o :Files<CR>
 " nnoremap [q :cprevious<CR>
 
 " ale mappings
-nmap <leader>ag <Plug>(ale_go_to_definition_in_split)
-nmap <leader>at <Plug>(ale_go_to_definition_in_tab)
-nmap <leader>ah <Plug>(ale_go_to_definition)
-nmap <leader>ar <Plug>(ale_find_references)
-nmap <silent> <C-i> <Plug>(ale_hover)
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
+" nmap <leader>ag <Plug>(ale_go_to_definition_in_split)
+" nmap <leader>at <Plug>(ale_go_to_definition_in_tab)
+" nmap <leader>ah <Plug>(ale_go_to_definition)
+" nmap <leader>ar <Plug>(ale_find_references)
+" nmap <silent> <C-i> <Plug>(ale_hover)
+" nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+" nmap <silent> <C-j> <Plug>(ale_next_wrap)
+
+" coc mappings
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+" GoTo code navigation.
+nmap <leader>ad <Plug>(coc-definition)
+nmap <leader>at :call CocActionAsync('jumpDefinition', 'tab drop')<CR>
+nmap <leader>as :call CocActionAsync('jumpDefinition', 'split')<CR>
+xmap <leader>av :call CocActionAsync('jumpDefinition', 'vsplit')<CR>
+nmap <leader>av :call CocActionAsync('jumpDefinition', 'vsplit')<CR>
+nmap <leader>ay <Plug>(coc-type-definition)
+nmap <leader>ai <Plug>(coc-implementation)
+nmap <leader>ar <Plug>(coc-references)
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>af  <Plug>(coc-fix-current)
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocActionAsync('fold', <f-args>)
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
+" Symbol renaming.
+nmap <leader>an <Plug>(coc-rename)
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " fugitive.vim mappings
 nmap <Leader>gs :Gstatus<CR>
