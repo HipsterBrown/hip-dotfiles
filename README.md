@@ -15,3 +15,10 @@ chmod +x setup.sh
 - copies `.gitconfig` into the HOME directory
 - installs [Volta](https://volta.sh/) for easy NodeJS version management
 - installs [`rust`](https://rustup.rs/)
+
+
+## Setup SpaceVim
+
+```sh
+curl -sLf https://spacevim.org/install.sh | bash
+```
