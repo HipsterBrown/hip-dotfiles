@@ -16,7 +16,7 @@
     # Disable guicolors in basic mode, many terminal do not support 24bit
     # true colors
     enable_guicolors = true
-    guifont = "FiraCode Nerd Font Mono:h12"
+    guifont = "FiraCode Nerd Font Mono:h10"
     # Disable statusline separator, if you want to use other value, please
     # install nerd fonts
     statusline_separator = "arrow"
@@ -29,10 +29,11 @@
     project_rooter_outermost = false
     filemanager = "defx"
     relativenumber = false
+    bootstrap_before = 'spacevim#before'
+    # bootstrap_after = 'spacevim#after'
 
 [[layers]]
 name = "core"
-filetree_show_hidden = true
 
 # Enable autocomplete layer
 [[layers]]
@@ -55,6 +56,9 @@ name = "fzf"
 [[layers]]
 name = 'git'
 git_plugin = "fugitive"
+
+[[layers]]
+name = 'github'
 
 [[layers]]
 name = 'VersionControl'
@@ -98,9 +102,11 @@ name = "tools"
 name = "lsp"
 filetypes = [
   "css",
-  "html",
-  "typescript"
+  "typescript",
+  "typescriptreact"
 ]
+[layers.override_cmd]
+  typescriptreact = ['typescript-language-server', '--stdio']
 
 [[custom_plugins]]
 repo = "colepeters/spacemacs-theme.vim"
@@ -114,4 +120,8 @@ repo = "roxma/vim-hug-neovim-rpc"
 
 [[custom_plugins]]
 repo = "vimwiki/vimwiki"
+merged = 0
+
+[[custom_plugins]]
+repo = "stsewd/fzf-checkout.vim"
 merged = 0
