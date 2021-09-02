@@ -3,7 +3,7 @@
 -- general
 lvim.format_on_save = true
 lvim.lint_on_save = true
-lvim.colorscheme = "onedark"
+lvim.colorscheme = "onedarker"
 
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
@@ -52,15 +52,15 @@ lvim.builtin.which_key.mappings["S"] = {
   c = { ":close<CR>", "Close current window" },
   o = { ":only<CR>", "Close all other windows" },
 }
--- lvim.builtin.which_key.mappings["t"] = {
---   name = "+Trouble",
---   r = { "<cmd>Trouble lsp_references<cr>", "References" },
---   f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
---   d = { "<cmd>Trouble lsp_document_diagnostics<cr>", "Diagnosticss" },
---   q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
---   l = { "<cmd>Trouble loclist<cr>", "LocationList" },
---   w = { "<cmd>Trouble lsp_workspace_diagnostics<cr>", "Diagnosticss" },
--- }
+lvim.builtin.which_key.mappings["t"] = {
+  name = "+Trouble",
+  r = { "<cmd>Trouble lsp_references<cr>", "References" },
+  f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
+  d = { "<cmd>Trouble lsp_document_diagnostics<cr>", "Diagnosticss" },
+  q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
+  l = { "<cmd>Trouble loclist<cr>", "LocationList" },
+  w = { "<cmd>Trouble lsp_workspace_diagnostics<cr>", "Diagnosticss" },
+}
 
 -- TODO: User Config for predefined plugins
 -- After changing plugin config exit and reopen LunarVim, Run :PackerInstall :PackerCompile
@@ -86,12 +86,12 @@ lvim.builtin.treesitter.highlight.enabled = true
 --   --Enable completion triggered by <c-x><c-o>
 --   buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
 -- end
-lvim.lang.typescript.formatters = { { exe = "eslint" }, { exe = "prettier"} }
+lvim.lang.typescript.formatters = { { exe = "eslint_d" }, { exe = "prettier"} }
 lvim.lang.typescriptreact.formatters = lvim.lang.typescript.formatters
 lvim.lang.javascript.formatters = lvim.lang.typescript.formatters
 lvim.lang.javascriptreact.formatters = lvim.lang.typescript.formatters
 
-lvim.lang.typescript.linters = { { exe = "eslint" } }
+lvim.lang.typescript.linters = { { exe = "eslint_d" } }
 lvim.lang.typescriptreact.linters = lvim.lang.typescript.linters
 lvim.lang.javascript.linters = lvim.lang.typescript.linters
 lvim.lang.javascriptreact.linters = lvim.lang.typescript.linters
@@ -122,17 +122,6 @@ lvim.lang.javascriptreact.linters = lvim.lang.typescript.linters
 lvim.plugins = {
   {"LunarVim/colorschemes"},
   {"Th3Whit3Wolf/space-nvim"},
-  {
-    "ahmedkhalf/project.nvim",
-    setup = function ()
-      vim.g.nvim_tree_update_cwd = 1
-      vim.g.nvim_tree_response_buf_cwd = 1
-    end,
-    config = function ()
-      require('project_nvim').setup {}
-      require('telescope').load_extension('projects')
-    end
-  },
   {
     "tpope/vim-surround",
     keys = {"c", "d", "y"}
@@ -189,7 +178,11 @@ lvim.plugins = {
       config = function ()
         require('Navigator').setup()
       end
-    }
+    },
+    {
+      "folke/trouble.nvim",
+      cmd = "TroubleToggle",
+    },
   }
 }
 
