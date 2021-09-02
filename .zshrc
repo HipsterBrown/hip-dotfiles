@@ -9,6 +9,7 @@ export PATH="$VOLTA_HOME/bin:$PATH"
 alias history='fc -l -100'
 alias ls="exa"
 alias cat="bat"
+alias vim="lvim"
 
 function md() {
   if [[ -d $@ ]]; then

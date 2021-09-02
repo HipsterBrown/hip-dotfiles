@@ -19,21 +19,14 @@ function setup_dotfiles() {
   echo 'installing dotfiles'
   cp .zshrc ~/.zshrc
   cp .zprofile ~/.zprofile
-  cp .vimrc ~/.vimrc
+
+  echo 'installing tpm'
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
   cp .tmux.conf ~/.tmux.conf
 
-  if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
-    echo 'installing vim-plug for vim magic'
-    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  fi
-  vim +PlugInstall +qall
-
-  if [ ! -f "$HOME/.vim/bundle/Vundle.vim" ]; then
-    echo 'installing Vundle plugins for vim'
-    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-  fi
-  vim +PluginInstall +qall
+  echo 'copying lvim config'
+  mkdir -p ~/.config/lvim
+  cp .config/lvim/config.lua ~/.config/lvim/config.lua
 
   echo 'installing config files'
   mkdir -p ~/.config/alacritty
