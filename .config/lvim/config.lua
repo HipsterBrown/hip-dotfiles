@@ -22,6 +22,7 @@ lvim.keys.normal_mode["<A-p>"] = "<cmd>lua require('Navigator').prevous()<CR>"
 -- Use which-key to add extra bindings with the leader-key prefix
 lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
 lvim.builtin.which_key.mappings['g']['y'] = { "<cmd>lua require'gitlinker'.get_buf_range_url('n')<cr>", "Copy current git to clipboard" }
+lvim.builtin.which_key.mappings['g']['P'] = { "<cmd>Telescope gh pull_request<cr>", "Copy current git to clipboard" }
 lvim.builtin.which_key.mappings["j"] = {
   name = "+Journal",
   a = { "<cmd>DearDiarySelectJournal<CR>", "Select active journal" },
@@ -44,14 +45,22 @@ lvim.builtin.which_key.mappings["j"] = {
     p = { "<cmd>DearDiaryLastMonth<CR>", "Go to entry for last month" },
   }
 }
-lvim.builtin.which_key.mappings["S"] = {
-  name = "+Splits/Window",
-  s = { ":split<CR>", "Split horizontal" },
-  v = { ":vsplit<CR>", "Split vertical" },
+lvim.builtin.which_key.mappings["w"] = {
+  name = "+Window/Splits",
   n = { ":new<CR>", "Open a new window" },
   c = { ":close<CR>", "Close current window" },
   o = { ":only<CR>", "Close all other windows" },
+  h = { "<C-w>h", "Focus window left" },
+  j = { "<C-w>j", "Focus window down" },
+  k = { "<C-w>k", "Focus window up" },
+  l = { "<C-w>l", "Focus window right" },
+  m = { ":wincmd _<cr>:wincmd \\|<cr>", "Maximize window" }
 }
+lvim.builtin.which_key.mappings["w"]["-"] = { ":split<CR>", "Split horizontal" }
+lvim.builtin.which_key.mappings["w"]["/"] = { ":vsplit<CR>", "Split vertical" }
+lvim.builtin.which_key.mappings["w"]["]"] = { ":resize +5<CR>", "Enlarge window" }
+lvim.builtin.which_key.mappings["w"]["["] = { ":resize -5<CR>", "Shrink window" }
+lvim.builtin.which_key.mappings["w"]["="] = { ":wincmd =<CR>", "Reset window evenly" }
 lvim.builtin.which_key.mappings["t"] = {
   name = "+Trouble",
   r = { "<cmd>Trouble lsp_references<cr>", "References" },
@@ -60,6 +69,23 @@ lvim.builtin.which_key.mappings["t"] = {
   q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
   l = { "<cmd>Trouble loclist<cr>", "LocationList" },
   w = { "<cmd>Trouble lsp_workspace_diagnostics<cr>", "Diagnosticss" },
+}
+lvim.builtin.which_key.mappings["<tab>"] = { "<cmd>BufferPrevious<cr>", "Last buffer" }
+lvim.builtin.which_key.mappings["'"] = { "<cmd>ToggleTerm<cr>", "Show terminal" }
+lvim.builtin.which_key.mappings["/"] = { "<cmd>Telescope find_files<cr>", "Search in project" }
+lvim.builtin.which_key.mappings[";"] = { "<cmd>CommentToggle<cr>", "Comment" }
+lvim.builtin.which_key.mappings["b"]["d"] = { "<cmd>BufferClose!<cr>", "Close buffer" }
+lvim.builtin.which_key.mappings["b"]["n"] = { "<cmd>BufferNext<cr>", "Next buffer" }
+lvim.builtin.which_key.mappings["b"]["p"] = { "<cmd>BufferPrevious<cr>", "Previous buffer" }
+lvim.builtin.which_key.mappings["b"]["s"] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Search in current buffer" }
+lvim.builtin.which_key.mappings["f"] = {
+  name = "+File",
+  f = { "<cmd>Telescope file_browser<cr>", "Open file/folder" },
+  s = { "<cmd>w!<cr>", "Save file" },
+  S = { "<cmd>wa!<cr>", "Save all files" },
+  t = { "<cmd>NvimTreeToggle<cr>", "Toggle file tree" },
+  T = { "<cmd>NvimTreeFindFile<cr>", "Show active file in file tree" },
+  r = { "<cmd>Telescope oldfiles<cr>", "Open recent" }
 }
 
 -- TODO: User Config for predefined plugins
@@ -183,6 +209,12 @@ lvim.plugins = {
       "folke/trouble.nvim",
       cmd = "TroubleToggle",
     },
+    {
+      "nvim-telescope/telescope-github.nvim",
+      config = function ()
+        require('telescope').load_extension('gh')
+      end
+    }
   }
 }
 
